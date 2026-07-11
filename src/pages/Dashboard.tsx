@@ -114,7 +114,7 @@ export default function Dashboard() {
   if (loading) return <p className="muted">Carregando…</p>
   if (error) return <div className="alert critical">{error}</div>
 
-  if (txs.length === 0) {
+  if (txs.length === 0 && debts.length === 0 && commitments.length === 0 && accounts.length === 0) {
     return (
       <div>
         <h1>Dashboard</h1>
@@ -124,6 +124,7 @@ export default function Dashboard() {
             <li>Crie suas contas em <Link to="/config">Configurações</Link> (ex.: Santander, Nubank, Mercado Pago)</li>
             <li>Importe seu primeiro extrato em <Link to="/conciliacao">Conciliação</Link></li>
             <li>Cadastre suas dívidas em <Link to="/dividas">Dívidas</Link> para montar o plano de quitação</li>
+            <li>Cadastre parcelamentos e recorrentes em <Link to="/orcamento">Orçamento</Link> (compromissos já sabidos, tipo fatura de cartão)</li>
             <li>Defina o orçado de cada categoria em <Link to="/orcamento">Orçamento</Link> (seu forecast)</li>
           </ol>
         </div>
