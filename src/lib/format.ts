@@ -44,6 +44,12 @@ export const lastNMonthKeys = (n: number, from = currentMonthKey()) => {
   return keys
 }
 
+export const nextNMonthKeys = (n: number, from = currentMonthKey()) => {
+  const keys: string[] = []
+  for (let i = 0; i < n; i++) keys.push(addMonths(from, i))
+  return keys
+}
+
 export const dateBR = (iso: string) => {
   const [y, m, d] = iso.split('-')
   return `${d}/${m}/${y}`

@@ -5,6 +5,7 @@ import { simulatePayoff, Strategy } from '../lib/debts'
 import { Debt } from '../lib/types'
 import { brl } from '../lib/format'
 import { PayoffChart, StatTile } from '../components/charts'
+import { EditIcon, TrashIcon } from '../components/icons'
 
 const KINDS = { cartao: 'Cartão', financiamento: 'Financiamento', emprestimo: 'Empréstimo', outro: 'Outro' } as const
 
@@ -116,8 +117,8 @@ export default function DebtsPage() {
                   <td className="num">{brl(d.min_payment)}</td>
                   <td className="num">{d.due_day ?? '—'}</td>
                   <td>
-                    <button className="ghost" onClick={() => { setEditing(d); setShowForm(true) }}>✏️</button>
-                    <button className="ghost" onClick={() => remove(d)}>🗑</button>
+                    <button className="ghost" title="Editar" onClick={() => { setEditing(d); setShowForm(true) }}><EditIcon /></button>
+                    <button className="ghost" title="Excluir" onClick={() => remove(d)}><TrashIcon /></button>
                   </td>
                 </tr>
               ))}

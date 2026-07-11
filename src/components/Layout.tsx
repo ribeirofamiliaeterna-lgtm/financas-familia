@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { WalletMark } from './icons'
 
 const LINKS = [
   ['/', 'Dashboard'],
@@ -16,7 +17,7 @@ export default function Layout({ email, children }: { email: string; children: R
   return (
     <div className="app">
       <nav className="sidebar">
-        <div className="brand">💰 Finanças da Família</div>
+        <div className="brand"><WalletMark />Finanças da Família</div>
         {LINKS.map(([to, label]) => (
           <NavLink key={to} to={to} end={to === '/'}
             className={({ isActive }) => (isActive ? 'nav active' : 'nav')}>

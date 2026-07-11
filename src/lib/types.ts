@@ -54,6 +54,20 @@ export interface Debt {
   due_day: number | null
 }
 
+export interface Commitment {
+  id: string
+  name: string
+  type: 'parcelamento' | 'recorrente'
+  category_id: string | null
+  monthly_amount: number
+  start_month: string // yyyy-mm-01
+  installments_count: number | null
+  end_month: string | null // yyyy-mm-01, nulo = sem fim (recorrente)
+  late: boolean
+  active: boolean
+  notes?: string | null
+}
+
 /** Linha parseada do extrato, antes de virar Transaction */
 export interface ParsedRow {
   date: string

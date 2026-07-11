@@ -5,6 +5,7 @@ import { Account, Category, Transaction } from '../lib/types'
 import { addMonths, brl, currentMonthKey, dateBR, monthLabelLong } from '../lib/format'
 import { normalizeDescription, txHash } from '../lib/normalize'
 import { groupOptions } from './Import'
+import { TrashIcon } from '../components/icons'
 
 export default function Transactions() {
   const [month, setMonth] = useState(currentMonthKey())
@@ -89,7 +90,7 @@ export default function Transactions() {
                     {groupOptions(cats, t.amount)}
                   </select>
                 </td>
-                <td><button className="ghost" title="Excluir" onClick={() => remove(t)}>🗑</button></td>
+                <td><button className="ghost" title="Excluir" onClick={() => remove(t)}><TrashIcon /></button></td>
               </tr>
             ))}
             {shown.length === 0 && <tr><td colSpan={6} className="muted">Nenhum lançamento neste mês.</td></tr>}

@@ -112,6 +112,24 @@ export function computeIndicators(opts: {
   }
 }
 
+/**
+ * Health Score (0–100): combina os 4 indicadores acima num só número.
+ * Metas alinhadas aos hints já exibidos nos StatTiles do Dashboard
+ * (poupança 10–20%, DTI saudável <36%, custo fixo até 50–60%, reserva 3–6 meses).
+ */
+export function healthScore(ind: HealthIndicators): number | null {
+  const clamp01 = (x: number) => Math.max(0, Math.min(1, x))
+  const parts: { value: number; weight: number }[] = []
+  if (ind.savingsRate !== null) parts.push({ value: clamp01(ind.savingsRate / 0.2), weight: 0.3 })
+  if (ind.dti !== null) parts.push({ value: clamp01(1 - ind.dti / 0.5), weight: 0.3 })
+  if (ind.fixedCostRatio !== null) parts.push({ value: clamp01(1 - ind.fixedCostRatio / 0.7), weight: 0.2 })
+  if (ind.emergencyMonths !== null) parts.push({ value: clamp01(ind.emergencyMonths / 6), weight: 0.2 })
+  if (parts.length === 0) return null
+  const totalWeight = parts.reduce((s, p) => s + p.weight, 0)
+  const score = parts.reduce((s, p) => s + p.value * p.weight, 0) / totalWeight
+  return Math.round(score * 100)
+}
+
 /** Detecta lançamentos recorrentes (mesma descrição em 2+ meses, valor estável) */
 export interface Recurring {
   normalized: string

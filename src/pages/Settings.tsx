@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
-import { ensureDefaultCategories, fetchAccounts } from '../lib/data'
+import { createCategory, ensureDefaultCategories, fetchAccounts } from '../lib/data'
 import { Account, Category } from '../lib/types'
 import { brl } from '../lib/format'
+import { TrashIcon } from '../components/icons'
 
 const ACC_TYPES = {
   corrente: 'Conta corrente', poupanca: 'Poupança', reserva: 'Reserva de emergência',
@@ -50,11 +51,10 @@ export default function SettingsPage() {
 
   const addCategory = async () => {
     if (!catName.trim() || !catGrp.trim()) { setError('Preencha nome e grupo da categoria.'); return }
-    const { error } = await supabase().from('categories').insert({
-      name: catName.trim(), grp: catGrp.trim(), kind: catKind, fixed: catFixed,
-    })
-    if (error) { setError(error.message); return }
-    setCatName(''); load()
+    try {
+      await createCategory(catName.trim(), catGrp.trim(), catKind, catFixed)
+      setCatName(''); load()
+    } catch (e: any) { setError(e.message) }
   }
 
   const removeCategory = async (c: Category) => {
@@ -94,7 +94,7 @@ export default function SettingsPage() {
                     <input className="amount" key={a.id + a.balance} defaultValue={a.balance ? a.balance.toFixed(2).replace('.', ',') : ''}
                       placeholder="0,00" onBlur={e => updateBalance(a, e.target.value)} />
                   </td>
-                  <td><button className="ghost" onClick={() => removeAccount(a)}>🗑</button></td>
+                  <td><button className="ghost" title="Excluir" onClick={() => removeAccount(a)}><TrashIcon /></button></td>
                 </tr>
               ))}
               {accounts.length === 0 && <tr><td colSpan={4} className="muted">Nenhuma conta — crie a primeira acima.</td></tr>}
@@ -127,7 +127,7 @@ export default function SettingsPage() {
                   <td>{c.name}</td>
                   <td className="muted">{c.kind}</td>
                   <td>{c.fixed ? '✓' : ''}</td>
-                  <td><button className="ghost" onClick={() => removeCategory(c)}>🗑</button></td>
+                  <td><button className="ghost" title="Excluir" onClick={() => removeCategory(c)}><TrashIcon /></button></td>
                 </tr>
               ))}
             </tbody>

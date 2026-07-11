@@ -44,6 +44,11 @@ export async function fetchBudgets(month?: string): Promise<Budget[]> {
   return data as Budget[]
 }
 
+export async function createCategory(name: string, grp: string, kind: 'despesa' | 'receita', fixed: boolean) {
+  const { error } = await supabase().from('categories').insert({ name, grp, kind, fixed })
+  if (error) throw error
+}
+
 export async function upsertBudget(categoryId: string, month: string, amount: number) {
   const { data: userData } = await supabase().auth.getUser()
   const { error } = await supabase().from('budgets').upsert(

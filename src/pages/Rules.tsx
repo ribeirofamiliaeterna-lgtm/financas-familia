@@ -5,6 +5,7 @@ import { normalizeDescription } from '../lib/normalize'
 import { ruleMatches } from '../lib/rules'
 import { Category, Rule } from '../lib/types'
 import { groupOptions } from './Import'
+import { TrashIcon } from '../components/icons'
 
 /**
  * Regras de categorização: "se a descrição contém X, categoria = Y".
@@ -100,11 +101,11 @@ export default function RulesPage() {
                 <td>{catById.get(r.category_id)?.name ?? '?'} <span className="muted">({catById.get(r.category_id)?.grp})</span></td>
                 <td>
                   <button className="ghost" onClick={() => toggleAuto(r)} title="Alternar entre aplicar automaticamente ou apenas sugerir">
-                    {r.auto ? '✅ aplica sozinha' : '💡 só sugere'}
+                    <span className={`badge ${r.auto ? 'rule' : 'hist'}`}>{r.auto ? 'aplica sozinha' : 'só sugere'}</span>
                   </button>
                 </td>
                 <td className="num">{r.hits}</td>
-                <td><button className="ghost" onClick={() => remove(r)}>🗑</button></td>
+                <td><button className="ghost" title="Excluir" onClick={() => remove(r)}><TrashIcon /></button></td>
               </tr>
             ))}
             {rules.length === 0 && <tr><td colSpan={5} className="muted">Nenhuma regra ainda — elas são criadas automaticamente quando você aceita sugestões na Conciliação.</td></tr>}

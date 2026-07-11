@@ -94,6 +94,24 @@ create table if not exists public.debts (
   created_at timestamptz not null default now()
 );
 
+-- COMPROMISSOS (parcelamentos de cartão e despesas recorrentes)
+create table if not exists public.commitments (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null default auth.uid() references auth.users(id) on delete cascade,
+  name text not null,
+  type text not null default 'recorrente',   -- parcelamento | recorrente
+  category_id uuid references public.categories(id) on delete set null,
+  monthly_amount numeric not null default 0,
+  start_month date not null,                 -- sempre dia 1
+  installments_count int,                    -- só parcelamento
+  end_month date,                            -- calculado no app: start + (installments-1) p/ parcelamento; nulo = recorrente sem fim
+  late boolean not null default false,       -- "parcelamento atrasado"
+  active boolean not null default true,      -- permite pausar recorrente sem apagar
+  notes text,
+  created_at timestamptz not null default now()
+);
+create index if not exists idx_commitments_user_month on public.commitments (user_id, start_month);
+
 -- ============================================================
 -- SEGURANÇA (RLS): cada usuário só vê e altera os próprios dados
 -- ============================================================
@@ -104,11 +122,12 @@ alter table public.imports      enable row level security;
 alter table public.transactions enable row level security;
 alter table public.budgets      enable row level security;
 alter table public.debts        enable row level security;
+alter table public.commitments  enable row level security;
 
 do $$
 declare t text;
 begin
-  foreach t in array array['accounts','categories','rules','imports','transactions','budgets','debts']
+  foreach t in array array['accounts','categories','rules','imports','transactions','budgets','debts','commitments']
   loop
     execute format('drop policy if exists "own rows" on public.%I', t);
     execute format(

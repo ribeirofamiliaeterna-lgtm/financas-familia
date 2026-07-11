@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { saveConfig, supabase } from '../lib/supabase'
+import { WalletMark } from '../components/icons'
 
 /**
  * Tela inicial: configura a conexão com o Supabase (uma vez por dispositivo)
@@ -76,7 +77,7 @@ function AuthForm() {
   return (
     <div className="login-wrap">
       <div className="card login-card">
-        <h1>💰 Finanças da Família</h1>
+        <h1><WalletMark />Finanças da Família</h1>
         <p className="subtitle">Controle de gastos, conciliação de extratos e plano de quitação de dívidas.</p>
         <div className="tabs">
           <button className={mode === 'login' ? 'active' : ''} onClick={() => setMode('login')}>Entrar</button>
